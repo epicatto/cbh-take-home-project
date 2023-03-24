@@ -3,19 +3,21 @@ const { deterministicPartitionKey } = require("./dpk");
 describe("deterministicPartitionKey", () => {
   it("Returns the literal '0' when given no input", () => {
     const trivialKey = deterministicPartitionKey();
+    expect(typeof trivialKey).toBe("string");
     expect(trivialKey).toBe("0");
   });
 
-  it("Returns the given partitionKey if it is present, is an string and its length is less or equals to 256", () => {
+  it("Returns the given partitionKey if it is present, is a string and its length is less or equals to 256", () => {
     const event = {
       partitionKey: "TEST_PARTITION_KEY",
     };
     const trivialKey = deterministicPartitionKey(event);
     expect(trivialKey).toBeDefined();
+    expect(typeof trivialKey).toBe("string");
     expect(trivialKey).toBe(event.partitionKey);
   });
 
-  it("Returns the given partitionKey (string) if it is present, is not an string and its length is less or equals to 256", () => {
+  it("Returns the given partitionKey (string) if it is present, is not a string and its length is less or equals to 256", () => {
     const event = {
       partitionKey: {
         prop4: 0,
@@ -24,10 +26,21 @@ describe("deterministicPartitionKey", () => {
     };
     const trivialKey = deterministicPartitionKey(event);
     expect(trivialKey).toBeDefined();
+    expect(typeof trivialKey).toBe("string");
     expect(trivialKey).toBe(JSON.stringify(event.partitionKey));
   });
 
-  it("Returns the HASH of given partitionKey if it is present, is an string and its length is greater than 256", () => {
+  it("Returns the HASH of given partitionKey if it is present, but the value is 0", () => {
+    const event = {
+      partitionKey: 0,
+    };
+    const trivialKey = deterministicPartitionKey(event);
+    expect(trivialKey).toBeDefined();
+    expect(typeof trivialKey).toBe("string");
+    expect(trivialKey).not.toBe(JSON.stringify(event.partitionKey));
+  });
+
+  it("Returns the HASH of given partitionKey if it is present, is a string and its length is greater than 256", () => {
     const event = {
       // 257 characters
       partitionKey:
@@ -35,10 +48,11 @@ describe("deterministicPartitionKey", () => {
     };
     const trivialKey = deterministicPartitionKey(event);
     expect(trivialKey).toBeDefined();
+    expect(typeof trivialKey).toBe("string");
     expect(trivialKey).not.toBe(event.partitionKey);
   });
 
-  it("Returns the HASH of given partitionKey if it is present, is not an string and its length is greater than 256", () => {
+  it("Returns the HASH of given partitionKey if it is present, is not a string and its length is greater than 256", () => {
     const event = {
       partitionKey: {
         // 257 characters
@@ -49,6 +63,7 @@ describe("deterministicPartitionKey", () => {
     };
     const trivialKey = deterministicPartitionKey(event);
     expect(trivialKey).toBeDefined();
+    expect(typeof trivialKey).toBe("string");
     expect(trivialKey).not.toBe(event.partitionKey);
     expect(trivialKey).not.toBe(JSON.stringify(event.partitionKey));
   });
@@ -64,6 +79,7 @@ describe("deterministicPartitionKey", () => {
     };
     const trivialKey = deterministicPartitionKey(event);
     expect(trivialKey).toBeDefined();
+    expect(typeof trivialKey).toBe("string");
     expect(trivialKey.length).toBeLessThanOrEqual(256);
   });
 });

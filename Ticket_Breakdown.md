@@ -73,7 +73,7 @@ Create a new `custom_agent_id`column in the `Agents` table.
 ADD COLUMN custom_agent_id VARCHAR NOT NULL;`
 
 ###### Execution plan
-- Blocks: TKT-4, TKT-5
+- Blocks: TKT-3, TKT-4
 - Blocked by: None
 
 ### TKT-3: Update the existing endpoints to store the custom Agent ID
@@ -142,7 +142,7 @@ We want to use the custom agent ID value instead of the current agent ID in the 
 - Blocked by: TKT-4
 
 
-### TKT-6: Backfill the new custom agent ID field 
+### TKT-6: Backfill the new `custom_agent_id` column
 
 ###### Description
 There may be data in the `Agents` table with a `null` value in the `custom_agent_id` column (because they already existed before we created the new column).
